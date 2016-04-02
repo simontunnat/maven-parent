@@ -7,7 +7,7 @@
     <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Simon Tunnats Maven Parent</description>
-    <url>https://github.com/simontunnat/</url>
+    <url>https://github.com/simontunnat/maven-parent</url>
 
     <licenses>
         <license>
@@ -24,10 +24,9 @@
     </distributionManagement>
 
     <scm>
-        <url>https://scm.tunn.at/scm/</url>
         <connection>scm:git:https://scm.tunn.at/scm/git/simon/maven/parent/</connection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <!-- maven -->
