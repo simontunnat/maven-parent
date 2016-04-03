@@ -32,7 +32,9 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:git:https://scm.tunn.at/scm/git/simon/maven/parent/</connection>
+        <url>https://github.com/simontunnat/maven-parent</url>
+        <connection>https://github.com/simontunnat/maven-parent.git</connection>
+        <developerConnection>scm:git:https://scm.tunn.at/scm/git/simon/maven/parent/</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
