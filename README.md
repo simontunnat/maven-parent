@@ -1,7 +1,11 @@
-# Simon Tunnats Maven Parent
+# Simon's Parent POM
 
-[ ![Download](https://api.bintray.com/packages/simontunnat/maven/org.tunnat.maven%3Aparent/images/download.svg) ](https://bintray.com/simontunnat/maven/org.tunnat.maven%3Aparent/_latestVersion)
-[![Build Status](https://travis-ci.org/simontunnat/maven-parent.svg?branch=master)](https://travis-ci.org/simontunnat/maven-parent)
+[![Build Status](https://img.shields.io/travis/simontunnat/maven-parent.svg)](https://travis-ci.org/simontunnat/maven-parent)
+[![Release](https://img.shields.io/github/release/simontunnat/maven-parent.svg)](https://github.com/simontunnat/maven-parent/releases)
+[![Bintray](https://img.shields.io/bintray/v/simontunnat/maven/org.tunnat.maven%3Aparent.svg)](https://bintray.com/simontunnat/maven/org.tunnat.maven%3Aparent/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/org.tunnat.maven/parent.svg)](https://maven-badges.herokuapp.com/maven-central/org.tunnat.maven/parent)
+
+This is the parent POM that all my (future) java projects inherit from.
 
 ## Legal
 
