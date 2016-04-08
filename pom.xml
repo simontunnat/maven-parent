@@ -4,7 +4,7 @@
 
     <groupId>org.tunnat.maven</groupId>
     <artifactId>parent</artifactId>
-    <version>3</version>
+    <version>4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>${project.externalName}</name>
     <description>Simon's Parent POM</description>
