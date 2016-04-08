@@ -17,4 +17,4 @@ git add pom.xml
 git commit -m "Next development version"
 
 # push
-git push --tags
+git push --follow-tags
