@@ -10,6 +10,6 @@ This is the parent POM that all my (future) java projects inherit from.
 
 ## Legal
 
-Copyright 2016 Simon Tunnat
+Copyright 2016-2017 Simon Tunnat
 
 Licensed under the [Apache License](LICENSE), Version 2.0.
