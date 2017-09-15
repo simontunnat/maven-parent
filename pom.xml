@@ -72,6 +72,7 @@
         <animal-sniffer-maven-plugin.version>1.16</animal-sniffer-maven-plugin.version>
         <versions-maven-plugin.version>2.4</versions-maven-plugin.version>
         <rpm-maven-plugin.version>2.1.5</rpm-maven-plugin.version>
+        <flatten-maven-plugin.version>1.0.0</flatten-maven-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     </properties>
 
@@ -225,6 +226,12 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${flatten-maven-plugin.version}</version>
+                </plugin>
+
+                <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>${nexus-staging-maven-plugin.version}</version>
@@ -250,7 +257,7 @@
                                     <version>1.8</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
-                                    <version>3.0.4</version>
+                                    <version>3.5.0</version>
                                 </requireMavenVersion>
                                 <requireProperty>
                                     <property>project.version</property>
@@ -292,6 +299,30 @@
                                 </checkSignatureRule>
                             </rules>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <configuration>
+                    <flattenMode>ossrh</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
