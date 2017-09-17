@@ -4,7 +4,7 @@
 
     <groupId>org.tunnat.maven</groupId>
     <artifactId>parent</artifactId>
-    <version>4-SNAPSHOT</version>
+    <version>${release}${changelist}</version>
     <packaging>pom</packaging>
     <name>${project.externalName}</name>
     <description>Simon's Parent POM</description>
@@ -42,15 +42,16 @@
     </scm>
 
     <properties>
+        <!-- continuous integration -->
+        <release>4</release>
+        <changelist>-SNAPSHOT</changelist>
+
         <!-- maven -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.externalName>${project.groupId}:${project.artifactId}</project.externalName>
-
-        <!-- dependency versions -->
-        <versions.junit>4.12</versions.junit>
 
         <!-- plugin versions -->
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -74,25 +75,11 @@
         <rpm-maven-plugin.version>2.1.5</rpm-maven-plugin.version>
         <flatten-maven-plugin.version>1.0.0</flatten-maven-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <dependency-check-maven.version>2.1.1</dependency-check-maven.version>
+
+        <!-- (plugin) dependency versions -->
+        <extra-enforcer-rules.version>1.0-beta-6</extra-enforcer-rules.version>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${versions.junit}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.codehaus.mojo.signature</groupId>
-                <artifactId>java18</artifactId>
-                <version>1.0</version>
-                <type>signature</type>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -163,13 +150,7 @@
                         <dependency>
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>extra-enforcer-rules</artifactId>
-                            <version>1.0-beta-6</version>
-                        </dependency>
-
-                        <dependency>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>animal-sniffer-enforcer-rule</artifactId>
-                            <version>1.15</version>
+                            <version>${extra-enforcer-rules.version}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -191,11 +172,6 @@
                         <pushChanges>false</pushChanges>
                         <tag>v${project.version}</tag>
                     </configuration>
-                </plugin>
-
-                <plugin>
-                    <artifactId>maven-stage-plugin</artifactId>
-                    <version>${maven-stage-plugin.version}</version>
                 </plugin>
 
                 <plugin>
@@ -239,9 +215,16 @@
                         <skipStaging>true</skipStaging>
                     </configuration>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${dependency-check-maven.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
+        <!-- enforce some basic rules for all maven projects -->
         <plugins>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -277,37 +260,38 @@
                                 <enforceBytecodeVersion>
                                     <maxJdkVersion>1.8</maxJdkVersion>
                                 </enforceBytecodeVersion>
-                                <!--<requireEncoding>-->
-                                    <!--<encoding>UTF-8</encoding>-->
-                                    <!--<includes>src/main/resources/**,src/test/resources/**</includes>-->
-                                <!--</requireEncoding>-->
-								<!--<bannedDependencies>-->
-                                    <!--<excludes>-->
-                                        <!--<exclude></exclude>-->
-                                    <!--</excludes>-->
-                                <!--</bannedDependencies>-->
+                                <requireEncoding>
+                                    <encoding>UTF-8</encoding>
+                                    <includes>src/main/resources/**,src/test/resources/**</includes>
+                                </requireEncoding>
                                 <bannedPlugins>
                                     <excludes>
                                         <exclude>org.apache.maven.plugins:maven-release-plugin</exclude>
                                     </excludes>
                                 </bannedPlugins>
-                                <checkSignatureRule implementation="org.codehaus.mojo.animal_sniffer.enforcer.CheckSignatureRule">
-                                    <signature>
-                                        <groupId>org.codehaus.mojo.signature</groupId>
-                                        <artifactId>java18</artifactId>
-                                    </signature>
-                                </checkSignatureRule>
                             </rules>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
+            <!-- configures the flatten plugins to flatten pom elements like the version (when using ci friendly versions) to ensure downwards compatibility to older maven version -->
+            <!-- see: https://maven.apache.org/maven-ci-friendly.html -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
                 <configuration>
-                    <flattenMode>ossrh</flattenMode>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>bom</flattenMode>
+                    <pomElements>
+                        <distributionManagement>flatten</distributionManagement>
+                        <repositories>flatten</repositories>
+                        <parent>keep</parent>
+                        <profiles>keep</profiles>
+                        <dependencyManagement>keep</dependencyManagement>
+                        <build>keep</build>
+                        <properties>keep</properties>
+                    </pomElements>
                 </configuration>
                 <executions>
                     <execution>
@@ -330,6 +314,7 @@
     </build>
 
     <profiles>
+        <!-- profile that should be used for all releases, creates source and javadoc jars -->
         <profile>
             <id>release</id>
             <build>
@@ -379,6 +364,7 @@
             </build>
         </profile>
 
+        <!-- profile that is enabled when the project is build with the JDK 8. Makes projects containing JDK 9 module-info.java files compatible with the JDK 8 -->
         <profile>
             <id>jdk8</id>
 
@@ -407,6 +393,7 @@
             </build>
         </profile>
 
+        <!-- profile that is enabled when the project is build with the JDK 9. Compiles all files except the module-info.java with JDK 8 compatibility -->
         <profile>
             <id>jdk9</id>
 
@@ -445,6 +432,7 @@
             </build>
         </profile>
 
+        <!-- optional profile that displays all available plugin and dependency updates -->
         <profile>
             <id>show-updates</id>
             <build>
