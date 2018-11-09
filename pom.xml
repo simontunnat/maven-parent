@@ -4,7 +4,7 @@
 
     <groupId>org.tunnat.maven</groupId>
     <artifactId>parent</artifactId>
-    <version>${release}${changelist}</version>
+    <version>${revision}${changelist}</version>
     <packaging>pom</packaging>
     <name>${project.externalName}</name>
     <description>Simon's Parent POM</description>
@@ -43,7 +43,7 @@
 
     <properties>
         <!-- continuous integration -->
-        <release>4</release>
+        <revision>4</revision>
         <changelist>-SNAPSHOT</changelist>
 
         <!-- maven -->
@@ -53,29 +53,34 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.externalName>${project.groupId}:${project.artifactId}</project.externalName>
 
-        <!-- plugin versions -->
-        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
-        <maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
-        <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-        <maven-site-plugin.version>3.6</maven-site-plugin.version>
-        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
-        <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
-        <maven-war-plugin.version>3.1.0</maven-war-plugin.version>
-        <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
-        <maven-dependency-plugin.version>3.0.1</maven-dependency-plugin.version>
+        <!-- apache plugin versions -->
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
-        <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
+        <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+        <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+        <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
+        <maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <maven-scm-plugin.version>1.11.1</maven-scm-plugin.version>
+        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-        <maven-scm-plugin.version>1.9.5</maven-scm-plugin.version>
-        <maven-javadoc-plugin.version>3.0.0-M1</maven-javadoc-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M1</maven-surefire-plugin.version>
+        <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
+
+        <!-- codehaus plugin versions -->
+        <animal-sniffer-maven-plugin.version>1.17</animal-sniffer-maven-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
-        <animal-sniffer-maven-plugin.version>1.16</animal-sniffer-maven-plugin.version>
-        <versions-maven-plugin.version>2.4</versions-maven-plugin.version>
-        <rpm-maven-plugin.version>2.1.5</rpm-maven-plugin.version>
-        <flatten-maven-plugin.version>1.0.0</flatten-maven-plugin.version>
+        <flatten-maven-plugin.version>1.0.1</flatten-maven-plugin.version>
+        <rpm-maven-plugin.version>2.2.0</rpm-maven-plugin.version>
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+
+        <!-- other plugin versions -->
+        <dependency-check-maven.version>3.3.4</dependency-check-maven.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
-        <dependency-check-maven.version>2.1.1</dependency-check-maven.version>
+        <resolve-parent-version-maven-plugin.version>0.7</resolve-parent-version-maven-plugin.version>
 
         <!-- (plugin) dependency versions -->
         <extra-enforcer-rules.version>1.0-beta-6</extra-enforcer-rules.version>
@@ -221,6 +226,12 @@
                     <artifactId>dependency-check-maven</artifactId>
                     <version>${dependency-check-maven.version}</version>
                 </plugin>
+
+                <plugin>
+                    <groupId>com.hbakkum.maven.plugins</groupId>
+                    <artifactId>resolve-parent-version-maven-plugin</artifactId>
+                    <version>${resolve-parent-version-maven-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -275,37 +286,16 @@
                 </executions>
             </plugin>
 
-            <!-- configures the flatten plugins to flatten pom elements like the version (when using ci friendly versions) to ensure downwards compatibility to older maven version -->
+            <!-- configures the resolve-parent-version-maven-plugin to flatten pom elements like the version (when using ci friendly versions) to ensure downwards compatibility to older maven version -->
+            <!-- the flatten-maven-plugin was used previously but did flatten much more then the version number which made it impossible to use variables for some settings -->
             <!-- see: https://maven.apache.org/maven-ci-friendly.html -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <configuration>
-                    <updatePomFile>true</updatePomFile>
-                    <flattenMode>bom</flattenMode>
-                    <pomElements>
-                        <distributionManagement>flatten</distributionManagement>
-                        <repositories>flatten</repositories>
-                        <parent>keep</parent>
-                        <profiles>keep</profiles>
-                        <dependencyManagement>keep</dependencyManagement>
-                        <build>keep</build>
-                        <properties>keep</properties>
-                    </pomElements>
-                </configuration>
+                <groupId>com.hbakkum.maven.plugins</groupId>
+                <artifactId>resolve-parent-version-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
                         <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
+                            <goal>resolve-parent-version</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -432,32 +422,81 @@
             </build>
         </profile>
 
-        <!-- optional profile that displays all available plugin and dependency updates -->
+        <!-- profile that is enabled when the project is build with the JDK 10. Compiles all files except the module-info.java with JDK 8 compatibility -->
         <profile>
-            <id>show-updates</id>
+            <id>jdk10</id>
+
+            <activation>
+                <jdk>10</jdk>
+            </activation>
+
             <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>versions-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>show-plugin-updates</id>
-                                <goals>
-                                    <goal>display-plugin-updates</goal>
-                                </goals>
-                                <phase>validate</phase>
-                            </execution>
-                            <execution>
-                                <id>show-dependency-updates</id>
-                                <goals>
-                                    <goal>display-dependency-updates</goal>
-                                </goals>
-                                <phase>validate</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default-compile</id>
+                                    <configuration>
+                                        <release>10</release>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>jdk8-compile</id>
+                                    <goals>
+                                        <goal>compile</goal>
+                                    </goals>
+                                    <configuration>
+                                        <release>8</release>
+                                        <excludes>
+                                            <exclude>module-info.java</exclude>
+                                        </excludes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <!-- profile that is enabled when the project is build with the JDK 11. Compiles all files except the module-info.java with JDK 8 compatibility -->
+        <profile>
+            <id>jdk11</id>
+
+            <activation>
+                <jdk>11</jdk>
+            </activation>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default-compile</id>
+                                    <configuration>
+                                        <release>11</release>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>jdk8-compile</id>
+                                    <goals>
+                                        <goal>compile</goal>
+                                    </goals>
+                                    <configuration>
+                                        <release>8</release>
+                                        <excludes>
+                                            <exclude>module-info.java</exclude>
+                                        </excludes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>
