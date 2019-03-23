@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.tunnat.maven</groupId>
-    <artifactId>parent</artifactId>
+    <groupId>org.tunnat</groupId>
+    <artifactId>maven-parent</artifactId>
     <version>${revision}${changelist}</version>
     <packaging>pom</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
@@ -27,23 +27,13 @@
     <distributionManagement>
         <repository>
             <id>bintray-simontunnat</id>
-            <url>https://api.bintray.com/maven/simontunnat/maven/${project.externalName}/;publish=1</url>
+            <url>https://api.bintray.com/maven/simontunnat/maven/${project.artifactId}/;publish=1</url>
         </repository>
-        <snapshotRepository>
-            <id>jfrog-snapshots</id>
-            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
-        </snapshotRepository>
     </distributionManagement>
-
-    <scm>
-        <url>https://github.com/simontunnat/maven-parent</url>
-        <connection>scm:git:git@github.com:simontunnat/maven-parent.git</connection>
-        <developerConnection>scm:git:git@github.com:simontunnat/maven-parent.git</developerConnection>
-    </scm>
 
     <properties>
         <!-- continuous integration -->
-        <revision>4</revision>
+        <revision>99</revision>
         <changelist>-SNAPSHOT</changelist>
 
         <!-- maven -->
@@ -289,19 +279,21 @@
                 </executions>
             </plugin>
 
-            <!-- configures the resolve-parent-version-maven-plugin to flatten pom elements like the version (when using ci friendly versions) to ensure downwards compatibility to older maven version -->
-            <!-- the flatten-maven-plugin was used previously but did flatten much more then the version number which made it impossible to use variables for some settings -->
-            <!-- see: https://maven.apache.org/maven-ci-friendly.html -->
             <plugin>
-                <groupId>com.hbakkum.maven.plugins</groupId>
-                <artifactId>resolve-parent-version-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>resolve-parent-version</goal>
+                            <goal>flatten</goal>
                         </goals>
+                        <phase>generate-resources</phase>
                     </execution>
                 </executions>
+                <configuration>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
             </plugin>
         </plugins>
     </build>
