@@ -3,6 +3,7 @@
 [![Build Status](https://img.shields.io/travis/simontunnat/maven-parent.svg)](https://travis-ci.org/simontunnat/maven-parent)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Release](https://img.shields.io/github/release/simontunnat/maven-parent.svg)](https://github.com/simontunnat/maven-parent/releases)
+[![Download](https://api.bintray.com/packages/simontunnat/maven/maven-parent/images/download.svg)](https://bintray.com/simontunnat/maven/maven-parent/_latestVersion)
 [![Maven Central](https://img.shields.io/maven-central/v/org.tunnat.maven/parent.svg)](https://maven-badges.herokuapp.com/maven-central/org.tunnat.maven/parent)
 
 This is the parent POM that all my (future) java projects inherit from.
