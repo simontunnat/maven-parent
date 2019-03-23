@@ -38,7 +38,7 @@
 
         <!-- maven -->
         <java.version>11</java.version>
-        <maven.version>3.6.0</maven.version>
+        <maven.version>3.5.0</maven.version>
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
