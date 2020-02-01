@@ -4,7 +4,7 @@
 
     <groupId>org.tunnat</groupId>
     <artifactId>maven-parent</artifactId>
-    <version>${revision}${changelist}</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Simon's Parent POM</description>
@@ -24,13 +24,6 @@
         </developer>
     </developers>
 
-    <distributionManagement>
-        <repository>
-            <id>bintray-simontunnat</id>
-            <url>https://api.bintray.com/maven/simontunnat/maven/${project.artifactId}/;publish=1</url>
-        </repository>
-    </distributionManagement>
-
     <scm>
         <url>https://github.com/simontunnat/maven-parent</url>
         <connection>scm:git:git@github.com:simontunnat/maven-parent.git</connection>
@@ -39,11 +32,10 @@
 
     <properties>
         <!-- continuous integration -->
-        <revision>99</revision>
-        <changelist>-SNAPSHOT</changelist>
+        <revision>1.0-SNAPSHOT</revision>
 
         <!-- maven -->
-        <java.version>11</java.version>
+        <java.version>8</java.version>
         <maven.version>3.5.0</maven.version>
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
@@ -75,6 +67,7 @@
         <flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
         <rpm-maven-plugin.version>2.2.0</rpm-maven-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+        <gmavenplus-plugin.version>1.8.0</gmavenplus-plugin.version>
 
         <!-- other plugin versions -->
         <dependency-check-maven.version>5.0.0-M2</dependency-check-maven.version>
@@ -212,6 +205,12 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>org.codehaus.gmavenplus</groupId>
+                    <artifactId>gmavenplus-plugin</artifactId>
+                    <version>${gmavenplus-plugin.version}</version>
+                </plugin>
+
+                <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>${nexus-staging-maven-plugin.version}</version>
@@ -247,7 +246,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>${java.version}</version>
+                                    <version>1.8</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
                                     <version>${maven.version}</version>
@@ -355,4 +354,11 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>maven-deployment-target</id>
+            <url>https://api.bintray.com/maven/simontunnat/maven/${project.artifactId}/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>

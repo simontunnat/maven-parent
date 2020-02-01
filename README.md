@@ -1,6 +1,5 @@
 # Simon's Parent POM
-
-[![Build Status](https://img.shields.io/travis/simontunnat/maven-parent.svg)](https://travis-ci.org/simontunnat/maven-parent)
+![Build](https://github.com/simontunnat/maven-parent/workflows/CI/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Release](https://img.shields.io/github/release/simontunnat/maven-parent.svg)](https://github.com/simontunnat/maven-parent/releases)
 [![Download](https://api.bintray.com/packages/simontunnat/maven/maven-parent/images/download.svg)](https://bintray.com/simontunnat/maven/maven-parent/_latestVersion)
@@ -10,6 +9,6 @@ This is the parent POM that all my (future) java projects inherit from.
 
 ## Legal
 
-Copyright 2016-2019 Simon Tunnat
+Copyright 2016-2020 Simon Tunnat
 
 Licensed under the [Apache License](LICENSE), Version 2.0.
