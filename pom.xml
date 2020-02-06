@@ -34,23 +34,23 @@
         <!-- continuous integration -->
         <revision>1.0-SNAPSHOT</revision>
 
+        <tunnat.failForOptionalEnforcerRules>true</tunnat.failForOptionalEnforcerRules>
+
         <!-- maven -->
-        <java.version>8</java.version>
         <maven.version>3.5.0</maven.version>
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- apache plugin versions -->
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
-        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
         <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
-        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
@@ -75,7 +75,7 @@
         <resolve-parent-version-maven-plugin.version>0.8</resolve-parent-version-maven-plugin.version>
 
         <!-- (plugin) dependency versions -->
-        <extra-enforcer-rules.version>1.1</extra-enforcer-rules.version>
+        <extra-enforcer-rules.version>1.2</extra-enforcer-rules.version>
     </properties>
 
     <build>
@@ -181,7 +181,7 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>animal-sniffer-maven-plugin</artifactId>
                     <version>${animal-sniffer-maven-plugin.version}</version>
-				</plugin>
+                </plugin>
 
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -257,27 +257,35 @@
                                     <regex>.*(\d|-SNAPSHOT)$</regex>
                                     <regexMessage>Project version must end in a number or -SNAPSHOT</regexMessage>
                                 </requireProperty>
-                                <dependencyConvergence />
-                                <requirePluginVersions />
-                                <banTransitiveDependencies />
-                                <banDistributionManagement />
-                                <requireUpperBoundDeps />
-                                <reactorModuleConvergence />
-                                <requireNoRepositories />
-								<banDuplicateClasses />
+                                <banDistributionManagement/>
+                                <reactorModuleConvergence/>
+                                <requireNoRepositories>
+                                    <allowedRepositories>jenkins-releases</allowedRepositories>
+                                </requireNoRepositories>
                                 <banCircularDependencies/>
                                 <enforceBytecodeVersion>
-                                    <maxJdkVersion>${java.version}</maxJdkVersion>
+                                    <maxJdkVersion>1.8</maxJdkVersion>
                                 </enforceBytecodeVersion>
-                                <requireEncoding>
-                                    <encoding>UTF-8</encoding>
-                                    <includes>src/main/resources/**,src/test/resources/**</includes>
-                                </requireEncoding>
                                 <bannedPlugins>
                                     <excludes>
                                         <exclude>org.apache.maven.plugins:maven-release-plugin</exclude>
                                     </excludes>
                                 </bannedPlugins>
+                            </rules>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>enforce-optional-rules</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <fail>${tunnat.failForOptionalEnforcerRules}</fail>
+                            <rules>
+                                <dependencyConvergence/>
+                                <requireUpperBoundDeps/>
+                                <banDuplicateClasses/>
                             </rules>
                         </configuration>
                     </execution>
@@ -319,8 +327,8 @@
                                 </goals>
                                 <configuration>
                                     <rules>
-                                        <requireReleaseDeps />
-                                        <requireReleaseVersion />
+                                        <requireReleaseDeps/>
+                                        <requireReleaseVersion/>
                                     </rules>
                                 </configuration>
                             </execution>
@@ -351,6 +359,112 @@
                         </executions>
                     </plugin>
                 </plugins>
+            </build>
+        </profile>
+
+
+        <!-- profile that is enabled when the project is build with the JDK 8. Makes projects containing JDK 9 module-info.java files compatible with the JDK 8 -->
+        <profile>
+            <id>jdk8</id>
+
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default-compile</id>
+                                    <configuration>
+                                        <excludes>
+                                            <exclude>module-info.java</exclude>
+                                        </excludes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>jdk9or10</id>
+
+            <activation>
+                <jdk>[9,10]</jdk>
+            </activation>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default-compile</id>
+                                    <configuration>
+                                        <release>9</release>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>jdk8-compile</id>
+                                    <goals>
+                                        <goal>compile</goal>
+                                    </goals>
+                                    <configuration>
+                                        <release>8</release>
+                                        <excludes>
+                                            <exclude>module-info.java</exclude>
+                                        </excludes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>jdk9plus</id>
+
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default-compile</id>
+                                    <configuration>
+                                        <release>9</release>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>jdk8-compile</id>
+                                    <goals>
+                                        <goal>compile</goal>
+                                    </goals>
+                                    <configuration>
+                                        <release>8</release>
+                                        <excludes>
+                                            <exclude>module-info.java</exclude>
+                                        </excludes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>
