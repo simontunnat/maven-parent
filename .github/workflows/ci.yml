@@ -86,6 +86,6 @@ jobs:
           BINTRAY_PACKAGE_NAME: "maven-parent"
           BINTRAY_VERSION: ${{ env.RELEASE_VERSION }}
         run: |
-          curl -s -S -u "${{ secrets.BINTRAY_USERNAME }}:${{ secrets.BINTRAY_PASSWORD }}"
-          -X POST --header "Content-Type: application/json" --data '{"close":"1"}'
+          curl -s -S -u "${{ secrets.BINTRAY_USERNAME }}:${{ secrets.BINTRAY_PASSWORD }}" \
+          -X POST --header "Content-Type: application/json" --data '{"close":"1"}' \
           "https://api.bintray.com/maven_central_sync/${{ secrets.BINTRAY_USERNAME }}/${{ env.BINTRAY_REPO_NAME }}/${{ env.BINTRAY_PACKAGE_NAME }}/versions/${{ env.BINTRAY_VERSION }}"
