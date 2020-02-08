@@ -66,6 +66,12 @@ jobs:
           MAVEN_DEPLOYMENT_PASSWORD: ${{ secrets.MAVEN_DEPLOYMENT_PASSWORD }}
         run: mvn -B -Drevision="${{ env.RELEASE_VERSION }}" clean deploy -P release --settings ./settings.xml
 
+      - name: Sync to Maven Central
+        run: |
+          curl -s -S -u "${{ secrets.MAVEN_DEPLOYMENT_USERNAME }}:${{ secrets.MAVEN_DEPLOYMENT_PASSWORD }}" \
+          -X POST --header "Content-Type: application/json" --data '{"close":"1"}' \
+          "https://api.bintray.com/maven_central_sync/${{ secrets.MAVEN_DEPLOYMENT_USERNAME }}/maven/maven-parent/versions/${{ env.RELEASE_VERSION }}"
+
       - name: Create Release
         uses: actions/create-release@v1
         env:
@@ -77,15 +83,3 @@ jobs:
             Version ${{ env.RELEASE_VERSION }}
           draft: false
           prerelease: false
-
-      - name: Sync to Maven Central
-        env:
-          BINTRAY_USERNAME: ${{ secrets.MAVEN_DEPLOYMENT_USERNAME }}
-          BINTRAY_PASSWORD: ${{ secrets.MAVEN_DEPLOYMENT_PASSWORD }}
-          BINTRAY_REPO_NAME: "maven"
-          BINTRAY_PACKAGE_NAME: "maven-parent"
-          BINTRAY_VERSION: ${{ env.RELEASE_VERSION }}
-        run: |
-          curl -s -S -u "${{ secrets.BINTRAY_USERNAME }}:${{ secrets.BINTRAY_PASSWORD }}" \
-          -X POST --header "Content-Type: application/json" --data '{"close":"1"}' \
-          "https://api.bintray.com/maven_central_sync/${{ secrets.BINTRAY_USERNAME }}/${{ env.BINTRAY_REPO_NAME }}/${{ env.BINTRAY_PACKAGE_NAME }}/versions/${{ env.BINTRAY_VERSION }}"
