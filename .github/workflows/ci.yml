@@ -11,7 +11,8 @@ on:
       - master
 
 jobs:
-  Build:
+  build:
+    name: Build with JDK ${{ matrix.jdk }}
     strategy:
       matrix:
         jdk: [1.8, 11, 13]
@@ -35,8 +36,9 @@ jobs:
       - name: Build and run Tests
         run: mvn -B clean verify
 
-  Release:
-    needs: Build
+  release:
+    name: Release
+    needs: build
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
@@ -82,7 +84,7 @@ jobs:
           BINTRAY_PASSWORD: ${{ secrets.MAVEN_DEPLOYMENT_PASSWORD }}
           BINTRAY_REPO_NAME: "maven"
           BINTRAY_PACKAGE_NAME: "maven-parent"
-          BINTRAY_VERSION: ${{ secrets.RELEASE_VERSION }}
+          BINTRAY_VERSION: ${{ env.RELEASE_VERSION }}
         run: |
           curl -s -S -u "${{ secrets.BINTRAY_USERNAME }}:${{ secrets.BINTRAY_PASSWORD }}"
           -X POST --header "Content-Type: application/json" --data '{"close":"1"}'
