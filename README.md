@@ -10,7 +10,7 @@ This is the parent POM that all my (future) java projects inherit from.
 * Java Version 8 or later (the project is build against JDK 8, 11 and 13)
 
 ## Usage
-Add the following dependency to your ```pom.xml```:
+Add the following snippet to your ```pom.xml```:
 ```
 <parent>
     <groupId>org.tunnat</groupId>
