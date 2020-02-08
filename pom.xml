@@ -64,7 +64,7 @@
         <!-- codehaus plugin versions -->
         <animal-sniffer-maven-plugin.version>1.17</animal-sniffer-maven-plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
-        <flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
+        <flatten-maven-plugin.version>1.2.1</flatten-maven-plugin.version>
         <rpm-maven-plugin.version>2.2.0</rpm-maven-plugin.version>
         <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
         <gmavenplus-plugin.version>1.8.0</gmavenplus-plugin.version>
@@ -293,20 +293,15 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
+                <groupId>com.hbakkum.maven.plugins</groupId>
+                <artifactId>resolve-parent-version-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>flatten</goal>
+                            <goal>resolve-parent-version</goal>
                         </goals>
-                        <phase>generate-resources</phase>
                     </execution>
                 </executions>
-                <configuration>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
-                </configuration>
             </plugin>
         </plugins>
     </build>
