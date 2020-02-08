@@ -393,44 +393,6 @@
         </profile>
 
         <profile>
-            <id>jdk9or10</id>
-
-            <activation>
-                <jdk>[9,10]</jdk>
-            </activation>
-
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>default-compile</id>
-                                    <configuration>
-                                        <release>9</release>
-                                    </configuration>
-                                </execution>
-                                <execution>
-                                    <id>jdk8-compile</id>
-                                    <goals>
-                                        <goal>compile</goal>
-                                    </goals>
-                                    <configuration>
-                                        <release>8</release>
-                                        <excludes>
-                                            <exclude>module-info.java</exclude>
-                                        </excludes>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-
-        <profile>
             <id>jdk9plus</id>
 
             <activation>
