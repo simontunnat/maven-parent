@@ -425,11 +425,4 @@
             </build>
         </profile>
     </profiles>
-
-    <distributionManagement>
-        <repository>
-            <id>maven-deployment-target</id>
-            <url>https://api.bintray.com/maven/simontunnat/maven/${project.artifactId}/;publish=1</url>
-        </repository>
-    </distributionManagement>
 </project>
