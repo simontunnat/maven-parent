@@ -39,7 +39,7 @@ jobs:
   release:
     name: Release
     env:
-      BINTRAY_PACKAGE: org.tunnat%3Amaven-parent
+      BINTRAY_PACKAGE: org.tunnat:maven-parent
     needs: build
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
