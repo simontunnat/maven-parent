@@ -39,7 +39,7 @@ jobs:
   release:
     name: Release
     env:
-      BINTRAY_PACKAGE_PATH: simontunnat/maven/org.tunnat%3Amaven-parent
+      BINTRAY_PACKAGE: org.tunnat%3Amaven-parent
     needs: build
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
@@ -65,16 +65,18 @@ jobs:
       - name: Deploy to Bintray
         uses: simontunnat/action-maven-deploy@v0.2
         with:
-          username: ${{ secrets.MAVEN_DEPLOYMENT_USERNAME }}
-          password: ${{ secrets.MAVEN_DEPLOYMENT_PASSWORD }}
-          repository: https://api.bintray.com/maven/${{ env.BINTRAY_PACKAGE_PATH }}/;publish=0
+          username: ${{ secrets.BINTRAY_USERNAME }}
+          password: ${{ secrets.BINTRAY_PASSWORD }}
+          repository: https://api.bintray.com/maven/${{ secrets.BINTRAY_USERNAME }}/maven/${{ env.BINTRAY_PACKAGE }}/;publish=0
           maven-args: -P release -Drevision=${{ env.RELEASE_VERSION }}
 
       - name: Sync to Maven Central
-        run: |
-          curl -s -S -u "${{ secrets.MAVEN_DEPLOYMENT_USERNAME }}:${{ secrets.MAVEN_DEPLOYMENT_PASSWORD }}" \
-          -X POST --header "Content-Type: application/json" --data '{"close":"1"}' \
-          "https://api.bintray.com/maven_central_sync/${{ env.BINTRAY_PACKAGE_PATH }}/versions/${{ env.RELEASE_VERSION }}"
+        uses: simontunnat/action-bintray-maven-central-sync@v0.2
+        with:
+          username: ${{ secrets.BINTRAY_USERNAME }}
+          password: ${{ secrets.BINTRAY_PASSWORD }}
+          package: ${{ env.BINTRAY_PACKAGE }}
+          version: ${{ env.RELEASE_VERSION }}
 
       - name: Create Release
         uses: actions/create-release@v1
