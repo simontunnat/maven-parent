@@ -63,7 +63,7 @@ jobs:
           java-version: 1.8
 
       - name: Deploy to Bintray
-        uses: simontunnat/action-maven-deploy@v0.2
+        uses: simontunnat/action-maven-deploy@v1
         with:
           username: ${{ secrets.BINTRAY_USERNAME }}
           password: ${{ secrets.BINTRAY_PASSWORD }}
@@ -71,7 +71,7 @@ jobs:
           maven-args: -P release -Drevision=${{ env.RELEASE_VERSION }}
 
       - name: Sync to Maven Central
-        uses: simontunnat/action-bintray-maven-central-sync@v0.2
+        uses: simontunnat/action-bintray-maven-central-sync@v0.3
         with:
           username: ${{ secrets.BINTRAY_USERNAME }}
           password: ${{ secrets.BINTRAY_PASSWORD }}
