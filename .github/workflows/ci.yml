@@ -71,7 +71,7 @@ jobs:
           maven-args: -P release -Drevision=${{ env.RELEASE_VERSION }}
 
       - name: Sync to Maven Central
-        uses: simontunnat/action-bintray-maven-central-sync@v0.4
+        uses: simontunnat/action-bintray-maven-central-sync@v1
         with:
           username: ${{ secrets.BINTRAY_USERNAME }}
           password: ${{ secrets.BINTRAY_PASSWORD }}
