@@ -285,7 +285,6 @@
                             <rules>
                                 <dependencyConvergence/>
                                 <requireUpperBoundDeps/>
-                                <banDuplicateClasses/>
                             </rules>
                         </configuration>
                     </execution>
