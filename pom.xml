@@ -35,7 +35,8 @@
         <revision>1.0-SNAPSHOT</revision>
 
         <tunnat.failForOptionalEnforcerRules>true</tunnat.failForOptionalEnforcerRules>
-        <tunnat.minCodeCoverage>0.60</tunnat.minCodeCoverage>
+        <tunnat.minInstructionCoverage>0.80</tunnat.minInstructionCoverage>
+        <tunnat.minClassCoverage>1.0</tunnat.minClassCoverage>
 
         <!-- maven -->
         <maven.version>3.5.0</maven.version>
@@ -332,9 +333,14 @@
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit>
-                                            <counter>COMPLEXITY</counter>
+                                            <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>${tunnat.minCodeCoverage}</minimum>
+                                            <minimum>${tunnat.minInstructionCoverage}</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>CLASS</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${tunnat.minClassCoverage}</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
