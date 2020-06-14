@@ -63,7 +63,7 @@
     <maven-site-plugin.version>3.9.0</maven-site-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
-    <maven-war-plugin.version>3.2.3</maven-war-plugin.version>
+    <maven-war-plugin.version>3.3.0</maven-war-plugin.version>
     <maven-project-info-reports-plugin.version>3.1.0</maven-project-info-reports-plugin.version>
 
     <!-- codehaus plugin versions -->
