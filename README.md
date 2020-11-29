@@ -7,7 +7,7 @@
 This is the parent POM that all my (future) java projects inherit from.
 
 ## Requirements
-* Java Version 8 or later (the project is build against JDK 8, 11 and 14)
+* Java Version 8 or later (the project is build against JDK 8, 11 and 15)
 
 ## Usage
 Add the following snippet to your ```pom.xml```:
