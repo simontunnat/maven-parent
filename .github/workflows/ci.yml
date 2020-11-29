@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set Release Version
-        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
+        run: echo ${GITHUB_REF:11} >> $GITHUB_ENV
 
       - uses: actions/checkout@v2
 
