@@ -39,6 +39,7 @@
     <tunnat.failForOptionalEnforcerRules>true</tunnat.failForOptionalEnforcerRules>
     <tunnat.minInstructionCoverage>0.80</tunnat.minInstructionCoverage>
     <tunnat.minClassCoverage>1.0</tunnat.minClassCoverage>
+    <tunnat.maxJdkVersion>1.8</tunnat.maxJdkVersion>
 
     <!-- maven -->
     <maven.version>3.5.0</maven.version>
@@ -294,7 +295,7 @@
                 </requireNoRepositories>
                 <banCircularDependencies/>
                 <enforceBytecodeVersion>
-                  <maxJdkVersion>1.8</maxJdkVersion>
+                  <maxJdkVersion>${tunnat.maxJdkVersion}</maxJdkVersion>
                 </enforceBytecodeVersion>
                 <bannedPlugins>
                   <excludes>
